@@ -53,7 +53,7 @@
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
 		<p>Rasterization is the process of taking some 3D geometric object that we want to sample and converting it to the 2D screen we want to display it on. We are essentially “flattening” the object, and we can do so by breaking it down into many triangles to display.</p>
 
-		<p>In order to rasterize a single triangle, we iterate through each pixel on the screen and determine whether or not its center lies inside the triangle through a binary process: if it does, we fill in that pixel, and if it doesn’t, we don’t, constructing the triangle pixel by pixel. To do this, we use the help of what is called the Point-in-Triangle Test. In this test, each edge of the triangle defines what are called half-planes where the triangle itself is the intersection of three half-planes. For each edge, we determine which side a pixel lies using a mathematical formula that returns a positive number if the pixel is “inside” the edge, a negative number if the pixel is “outside” the edge, and 0 if it lies on the edge. A pixel that lies on an edge is considered inside the triangle. If all three edges collectively return a number >= 0 or <= 0 (depending on the winding order of the vertices), then that pixel is inside the triangle.</p>
+		<p>In order to rasterize a single triangle, we iterate through each pixel on the screen and determine whether or not its center (x-coordinate + 0.5, y-coordinate + 0.5) lies inside the triangle through a binary process: if it does, we fill in that pixel, and if it doesn’t, we don’t, constructing the triangle pixel by pixel. To do this, we use the help of what is called the Point-in-Triangle Test. In this test, each edge of the triangle defines what are called half-planes where the triangle itself is the intersection of three half-planes. For each edge, we determine which side a pixel lies using a mathematical formula that returns a positive number if the pixel is “inside” the edge, a negative number if the pixel is “outside” the edge, and 0 if it lies on the edge. In my implementation, a pixel that lies on an edge is considered inside the triangle, though an improved one would include the OpenGL/Direct 3D Edge Rules to tie-break edges shared by two triangles. If all three edges collectively return a number >= 0 or <= 0 (depending on the winding order of the vertices), then that pixel is inside the triangle.</p>
 
 		<p>To make the process more efficient, my algorithm only checks each sample within the bounding box of the triangle, which is the smallest rectangle that can be drawn around the triangle while ensuring the entire triangle is inside it. To find the bounding box, I pulled the minimum and maximum x and y values out of the three vertices given to define the corners of the box. Then, I created a nested loop to iterate through its rows and columns, determining each pixel’s location relative to the triangle and filling them in appropriately. This process uses a helper function <code>isInsideTriangle()</code> that implements the binary process and the Point-in-Triangle Test described above. Since my algorithm checks each sample within the bounding box once, it can therefore be no worse than any algorithm that checks each sample within the bounding box of a given triangle.</p>
 
@@ -95,7 +95,42 @@
 		-->
 		
 		<h2>Task 2: Antialiasing by Supersampling</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>Aliasing is a visual defect that occurs when diagonal or curved lines appear jagged and staircase-like because of the pixel grid of the display. Anti-aliasing techniques are those used to help alleviate this effect. In this task, I implemented supersampling, which is an anti-aliasing technique that renders an image at a much higher resolution before downsampling it to the display.</p>
+
+		<p>To begin the supersampling process, I began by modifying both <code>set_sample_rate()</code> and <code>set_framebuffer_target()</code> in order to expand our sample buffer based on <code>sample_rate</code> for each pixel that gets added. Our sample buffer can be thought of as a high resolution grid that is implemented as a 1-dimensional, dynamically resizable <code>Color</code> array and is where we will temporarily store the colors of each subpixel which will be useful later on. Its expansion could be done when the user either resizes the window or changes the sample rate.</p>
+
+		<p>Next, I modified <code>rasterize_triangle()</code> from task 1 to iterate through each subpixel within a given pixel. Using various details about the whole pixel, I found the coordinates of the centers of each subpixel to pass into our <code>isInsideTriangle()</code> helper function. I either set that subpixel’s location in <code>sample_buffer</code> to <code>color</code> or did nothing depending on whether it <code>isInsideTriangle()</code>, where its location in <code>sample_buffer</code> is calculated using the pixel’s original index, the screen width, and <code>sample_rate</code>. This process fills up <code>sample_buffer</code> with each subpixel’s color.</p>
+
+		<p>Finally, I modified <code>resolve_to_framebuffer()</code> to complete the supersampling process. I iterate through each pixel’s subpixel group in <code>sample_buffer</code>, adding up the red, green, and blue components of their colors. They are then each divided by <code>sample_rate</code> to get the final shades of red, green, and blue to determine the final blended color for the entire pixel. This final color is then assigned in the pixel’s location in <code>rgb_framebuffer_target</code>, a 1D array that represents the final image displayed on our screen.</p>
+
+		<p>Collectively, the supersampling process is very useful because by assigning pixel colors to the average color of their subpixels, we smoothen out the transitions in pixel color in jagged edges by blending them together (see below). To antialias our triangles using supersampling, we rendered the image at a higher resolution and stored it in <code>sample_buffer</code> before transferring it to our frame buffer with the appropriate shades of color for each pixel.</p>
+
+		<p>On a final note, in addition to the modifications to the rasterization process explained above, I also modified <code>fill_pixel()</code> to fill each subpixel within a given pixel with the same color the pixels should be to account for rendering issues with points and lines after the supersampling modifications.</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 2 Sample Rate 1.png" width="400px"/>
+				  <figcaption>Sample rate of 1 pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 2 Sample Rate 4.png" width="400px"/>
+				  <figcaption>Supersample rate of 4 subpixels/pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+			<table>
+				<tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 2 Sample Rate 16.png" width="400px"/>
+				  <figcaption>Supersample rate of 16 subpixels/pixel</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>Displayed above are results of sampling an image using different sampling rates. Zooming in on the right vertex of the red triangle, we can see the difference supersampling makes. Sampling just once per pixel gives us jagged edges as well as inconsistent colorings where pixels are separated from each other. However, supersampling at 4 and 16 subpixels/pixel gives us very well blended corners where these inconsistent colorings are reduced since the transitions use different shades of red.</p>
 
 		<h2>Task 3: Transforms</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
