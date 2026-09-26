@@ -48,7 +48,9 @@
 		-->
 
 		<h2>Overview</h2>
-		Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.
+		<p>Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.</p>
+
+		<br>
 
 		<h2>Task 1: Drawing Single-Color Triangles</h2>
 		<p>Rasterization is the process of taking some 3D geometric object that we want to sample and converting it to the 2D screen we want to display it on. We are essentially “flattening” the object, and we can do so by breaking it down into many triangles to display.</p>
@@ -114,6 +116,8 @@
 		</div>
 		-->
 		
+		<br>
+
 		<h2>Task 2: Antialiasing by Supersampling</h2>
 		<p>Aliasing is a visual defect that occurs when diagonal or curved lines appear jagged and staircase-like because of the pixel grid of the display. Anti-aliasing techniques are those used to help alleviate this effect. In this task, I implemented supersampling, which is an anti-aliasing technique that renders an image at a much higher resolution before downsampling it to the display.</p>
 
@@ -172,8 +176,36 @@
 
 		<p>Displayed above are results of sampling an image using different sampling rates. Zooming in on the right vertex of the red triangle, we can see the difference supersampling makes. Sampling just once per pixel gives us jagged edges as well as inconsistent colorings where pixels are separated from each other. However, supersampling at 4 and 16 subpixels/pixel gives us very well blended corners where these inconsistent colorings are reduced since the transitions use different shades of red across more pixels.</p>
 
+		<br>
+
 		<h2>Task 3: Transforms</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>In this task, I implemented three transformations that we can apply to objects to change their positions: translation, scaling, and rotation. Depending on the type of transformation, you will have different dimensions and operations to deal with, such as 2D vs. 3D and addition vs. multiplication. We use something called homogenous coordinates to unify all geometric transformations into a single system of matrix multiplications by adding an extra dimension to standard coordinates. In other words, they sync up the entire process into a single “language” to make it faster and easier to perform these transformations. As an example, scaling and rotation are done through multiplication, but translation is done through addition. We can shortcut the process of switching between individual operations on each pixel by using homogenous coordinates to create a single matrix that encapsulates all transformations to be used on all pixels (i.e., shifting, rotating, and translating all at once).</p>
+
+		<p>I implemented the three transformation matrices for translation, scaling, and rotation, with rotation being done after converting from degrees to radians to be used with the built in <code>std::sin()</code> and <code>std::cos()</code> functions. Starting from a single red square, these transformations were applied to draw the following robot:</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 3 Square.png" width="400px"/>
+				  <figcaption>Initial square</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 3 Robot.png" width="400px"/>
+				  <figcaption>Robot created from square</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>Afterwards, I created a new version of cubeman where he jumps using the transformation matrices implemented. I first rotated the arms 45 degrees so they are “thrown” up in the air, then translated them up to align with the shoulders. For the legs, I rotated them 35 degrees to spread outward and then translated them left and right to align with the hips. Finally, I translated the entire body upward to perform the jump.</p>
+
+		<figure>
+			<img src="assets/Task 3 Robot Jumping.png" alt="Robot jumping" style="width:50%"/>
+			<figcaption>Robot jumping</figcaption>
+		</figure>
+
+		<br>
 
 		<h2>Task 4: Barycentric coordinates</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
