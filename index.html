@@ -55,10 +55,25 @@
 
 		<p>In order to rasterize a single triangle, I modified <code>rasterize_triangle()</code> to iterate through each pixel on the screen and determine whether or not its center (x-coordinate + 0.5, y-coordinate + 0.5) lies inside the triangle. This is done through a binary process: if it does, we fill in that pixel, and if it doesn’t, we don’t, constructing the triangle pixel by pixel. To do this, we use the help of what is called the Point-in-Triangle Test. In this test, each edge of the triangle defines what are called half-planes where the triangle itself is the intersection of three half-planes. For each edge, we determine which side a pixel lies using a mathematical formula that returns a positive number if the pixel is “inside” the edge, a negative number if the pixel is “outside” the edge, and 0 if it lies on the edge. In my implementation, a pixel that lies on an edge is considered inside the triangle, though an improved one would include the OpenGL/Direct 3D Edge Rules to tie-break edges shared by two triangles. If all three edges collectively return a number >= 0 or <= 0 (depending on the winding order of the vertices), then that pixel is inside the triangle.</p>
 
-		<figure>
-			<img src="assets/Task 1 Inside Triangle Example.png" alt="Inside Triangle Test" style="width:50%"/>
-			<figcaption>Image credit: CS 184 Lecture 2, Fall 2026</figcaption>
-		</figure>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 1 Sampling Example.png" width="400px"/>
+				  <figcaption>Point-in-Triangle Test</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 1 Sampling Result.png" width="400px"/>
+				  <figcaption>Sampling result on the display</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td colspan="2" style="text-align: center; padding-top: 15px;"">
+				  <figcaption style="display: block;">Image credits: CS 184 Lecture 2, Fall 2026</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
 		<p>To make the process more efficient, my algorithm only checks each sample within the bounding box of the triangle, which is the smallest rectangle that can be drawn around the triangle while ensuring the entire triangle is inside it. To find the bounding box, I pulled the minimum and maximum x and y values out of the three vertices given to define the corners of the box. Then, I created a nested loop to iterate through its rows and columns, determining each pixel’s location relative to the triangle and filling them in appropriately. This process uses a helper function <code>isInsideTriangle()</code> that implements the binary process and the Point-in-Triangle Test described above. Since my algorithm checks each sample within the bounding box once, it can therefore be no worse than any algorithm that checks each sample within the bounding box of a given triangle.</p>
 
