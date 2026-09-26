@@ -28,7 +28,7 @@
 	<body>
 		<div class="container">
 		<h1>CS184/284A Fall 2026 Homework 1 Write-Up</h1>
-		<div style="text-align: center;">Names: Andrew Kim</div>
+		<div style="text-align: center;">Name: Andrew Kim</div>
 
 		<br>
 
@@ -149,8 +149,6 @@
 
 		<p>Collectively, the supersampling process is very useful because by assigning pixel colors to the average color of their subpixels, we smoothen out the transitions in pixel color in jagged edges by blending them together. To antialias our triangles using supersampling, we rendered the image at a higher resolution and stored it in <code>sample_buffer</code> before transferring it to our frame buffer with the appropriate shades of color for each pixel.</p>
 
-		<p>On a final note, in addition to the modifications to the rasterization pipeline explained above, I also modified <code>fill_pixel()</code> to account for rendering issues regarding points and lines after the supersampling modifications, since points and lines aren’t anti-aliased. To do this, I filled each subpixel within a given pixel all to be the same color the pixel should be.</p>
-
 		<div style="display: flex; flex-direction: column; align-items: center;">
 			<table style="width: 100%; text-align: center; border-collapse: collapse;">
 			  <tr>
@@ -176,6 +174,8 @@
 
 		<p>Displayed above are results of sampling an image using different sampling rates. Zooming in on the right vertex of the red triangle, we can see the difference supersampling makes. Sampling just once per pixel gives us jagged edges as well as inconsistent colorings where pixels are separated from each other. However, supersampling at 4 and 16 subpixels/pixel gives us very well blended corners where these inconsistent colorings are reduced since the transitions use different shades of red across more pixels.</p>
 
+		<p>On a final note, in addition to the modifications to the rasterization pipeline explained above, I also modified <code>fill_pixel()</code> to account for rendering issues regarding points and lines after the supersampling modifications, since points and lines aren’t anti-aliased. To do this, I filled each subpixel within a given pixel all to be the same color the pixel should be.</p>
+
 		<br>
 
 		<h2>Task 3: Transforms</h2>
@@ -192,13 +192,13 @@
 				</td>
 				<td style="text-align: center;">
 				  <img src="assets/Task 3 Robot.png" width="400px"/>
-				  <figcaption>Robot created from square</figcaption>
+				  <figcaption>Robot created from square transformations</figcaption>
 				</td>
 			  </tr>
 			</table>
 		</div>
 
-		<p>Afterwards, I created a new version of cubeman where he jumps using the transformation matrices implemented. I first rotated the arms 45 degrees so they are “thrown” up in the air, then translated them up to align with the shoulders. For the legs, I rotated them 35 degrees to spread outward and then translated them left and right to align with the hips. Finally, I translated the entire body upward to perform the jump.</p>
+		<p>Afterwards, I created a new version of cubeman where he jumps using the transformation matrices implemented. I first rotated the arms 45 degrees so they are “thrown” up in the air, then translated them up to align with the shoulders. For the legs, I rotated them 35 degrees to spread outward and then translated them left and right to align with the hips. Finally, I translated the entire body upward to perform the jump. These transformations follow a hierarchical structure, meaning that subsequent body parts follow the transformation of its parent (i.e. forearm rotating and translating alongside the upper arm).</p>
 
 		<figure>
 			<img src="assets/Task 3 Robot Jumping.png" alt="Robot jumping" style="width:50%"/>
