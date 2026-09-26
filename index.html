@@ -207,9 +207,33 @@
 
 		<br>
 
-		<h2>Task 4: Barycentric coordinates</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h2>Task 4: Barycentric Coordinates</h2>
+		<p>Barycentric coordinates are a coordinate system used to smoothen out attributes of an object, such as a triangle. One common example is interpolating the colors of the three vertices of a triangle to create a blended result. Given a point within a triangle, we can determine its color based on these coordinates that tell you how close it is to each vertex. The barycentric coordinates for a point P are the scalars, or “weights”, (alpha, beta, gamma) that tell you how close P is to each vertex. The closer it is to a vertex, the higher the weight. The further away, the lower the weight. All weights add up to 1 where each weight must be non-negative for the point to lie within the triangle (including on edges).</p>
 
+		<p>We can think of each vertex as having a “gravitational pull” on a point. For example, in the image below we have four points located inside the triangle with alpha corresponding to red, beta corresponding to green, and gamma corresponding to blue:</p>
+
+		<figure>
+			<img src="assets/Task 4 Interpolated Triangle.png" alt="Interpolated triangle" style="width:50%"/>
+			<figcaption>An interpolated triangle</figcaption>
+		</figure>
+
+		<p>The point on the red vertex is completely red since it lies directly on the vertex, so its barycentric coordinates are (1.0, 0.0, 0.0). </p>
+
+		<p>For the point that lies halfway along the red-green edge, its weights are equally split between red and green (and none for blue), so we get a blended red-green color where its barycentric coordinates are (0.5, 0.5, 0.0).</p>
+
+		<p>For the point directly in the center of the triangle, all three vertices are equally influencing its color, so its barycentric coordinates are (0.33, 0.33, 0.33). </p>
+
+		<p>For the point closest to the blue vertex, its color is predominantly blue with very little red and green influence, though they are still present, so we get a blended red-green-blue color that is more blue defined by the barycentric coordinates (0.10, 0.20, 0.70).</p>
+
+		<p>After implementing <code>rasterize_interpolated_color_triangle()</code>, I was able to render the following image of a fully interpolated color wheel:</p>
+
+		<figure>
+			<img src="assets/Task 4 Interpolated Color Wheel.png" alt="Color wheel" style="width:50%"/>
+			<figcaption>An interpolated color wheel</figcaption>
+		</figure>
+
+		<br>
+		
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 

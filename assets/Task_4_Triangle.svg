@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Custom_Triangle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="500.0px" height="500.0px" viewBox="0 0 500 500" enable-background="new 0 0 500 500"
+	 xml:space="preserve">
+
+	<!-- 
+    An interpolated triangle
+	Vertex 1: (250, 50) with color red
+	Vertex 2: (50, 400) with color green
+	Vertex 3: (450, 400) with color blue
+    -->
+	<colortri points="250 50 50 400 450 400" colors="1 0 0 1  0 1 0 1  0 0 1 1" />
+
+	<!--> Point at the red vertex -->
+	<polygon fill="#000000" points="240,40 260,40 260,60 240,60" />
+
+	<!-- Point on edge and halfway between red and green vertices -->
+	<polygon fill="#000000" points="140,215 160,215 160,235 140,235" />
+
+	<!-- Point in the center of the triangle -->
+	<polygon fill="#000000" points="240,273 260,273 260,293 240,293" />
+
+	<!-- Point closer to the blue vertex -->
+	<polygon fill="#000000" points="380,355 400,355 400,375 380,375" />
+
+
+</svg>
