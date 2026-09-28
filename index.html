@@ -248,7 +248,7 @@
 
 		<p>In the context of texture mapping, pixel sampling is the process we use to map each location on our object to a location on the texture. We try to figure out which colors each pixel on our display should be in order to recreate the original image as best as possible. We do this for the entire object to “wrap” it in our desired texture.</p>
 
-		<p>To implement pixel sampling and use it to perform texture mapping, I began by modifying <code>rasterize_textured_triangle()</code> using logic from previous tasks to find the bounding box of the triangle, iterate through each subpixel in it, and check to see if they are inside the triangle. If a subpixel is inside, I calculated its barycentric coordinates using the formulas seen in class (and used in task 4) and used them to determine the interpolated texture coordinates for the subpixel. Finally, I found the texture color based on whether the sampling method was nearest neighbor or bilinear interpolation by calling either <code>sample_nearest()</code> or <code>sample_bilinear()</code>, ending the function by writing the appropriate color to our <code>sample_buffer</code>.</p>
+		<p>To implement pixel sampling and use it to perform texture mapping, I began by modifying <code>rasterize_textured_triangle()</code> using logic from previous tasks to find the bounding box of the triangle, iterate through each subpixel in it, and check to see if they are inside the triangle. If a subpixel is inside, I calculated its barycentric coordinates using the formulas seen in class (and used in task 4) and used them to determine the interpolated texture coordinates for the subpixel. Finally, I found the texture color based on whether the sampling method was nearest neighbor or bilinear interpolation by calling either <code>sample_nearest()</code> or <code>sample_bilinear()</code>, with mipmap level 0 for this task, ending the function by writing the appropriate color to our <code>sample_buffer</code>.</p>
 
 		<p>These sampling methods are two common methods used to determine what color a pixel should be when our texel coordinates, the location on the 2D texture, do not lie perfectly on any individual pixel. To determine what texel to return, they use different approaches. Nearest neighbor sampling simply grabs whichever texel is closest to the coordinate by rounding to the nearest whole texel and returning it. Bilinear pixel sampling, on the other hand, takes each of the four surrounding texels and blends them together, returning a more smooth result.</p>
 
@@ -256,7 +256,7 @@
 			<img src="assets/Task 5 Sampling Example.png" alt="Sampling" style="width:50%"/>
 			<figcaption>
 				<p>Texel coordinates (red) that don't lie perfectly on a sample location (black)</p>
-				<p>Image credit: CS 184 Lecture 7, Fall 2026</p>
+				<p>Image credit: CS 184 Lecture 6 Slides, Fall 2026</p>
 			</figcaption>
 		</figure>
 
@@ -302,11 +302,11 @@
 
 		<p><u>Bilinear at 1 sample/pixel</u>: Comparable to nearest at 16 samples/pixel. Darker areas of Italy are still block like, but the smooth transition in color is more evident.</p>
 
-		<p><u>Bilinear at 16 samples/pixel</u>: Best looking result. The transitions from darker to brighter colors of Italy are very smooth and the longitude line is a very consistent shade of white.</p>
+		<p><u>Bilinear at 16 samples/pixel</u>: Best looking result. The transitions from darker to brighter areas of Italy are very smooth and the longitude line is a very consistent shade of white.</p>
 
 		<p>There would be a large difference between these two methods during magnification (as seen in this example). When magnified, nearest creates sharp, block-like results since it just grabs the nearest texel color and has to stretch it across multiple pixels, creating high-frequency discontinuities. Bilinear on the other hand, blends the surrounding texel colors together by acting as a low-pass filter, creating a much smoother result.</p>
 
-		<p>While rendering, I ran into a problem where there was no difference in the images when using 1 sample per pixel as opposed to 16 for both nearest and bilinear. This was because at the end of <code>rasterize_textured_triangle()</code>, I called <code>filled_pixel()</code> instead of using the supersampling logic I built in task 2. To fix this, I changed my function to perform the same operations (sampling, barycentric coordinate calculations, etc.) on subpixels as opposed to entire pixels, which fixed the rendered images by factoring in the different sampling rates.</p>
+		<p>While rendering, I ran into a problem where there was no difference in the images when using 1 sample per pixel as opposed to 16 for both nearest and bilinear. This was because at the end of <code>rasterize_textured_triangle()</code>, I called <code>fill_pixel()</code> instead of using the supersampling logic I built in task 2. To fix this, I changed my function to perform the same operations (sampling, barycentric coordinate calculations, etc.) on subpixels as opposed to entire pixels, which fixed the rendered images by factoring in the different sampling rates.</p>
 
 		<br>
 
