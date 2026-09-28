@@ -235,7 +235,80 @@
 		<br>
 		
 		<h2>Task 5: "Pixel sampling" for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+		<p>Texture mapping is the process of “wrapping” a 3D object with some 2D texture. We can think of it like “shrink wrapping” a 2D plane onto some object or gift wrapping a box to give it certain colors, textures, geometry, etc. without needing to form each individual detail on the object itself.</p>
+
+		<figure>
+			<img src="assets/Task 5 Texture Mapping Example.png" alt="Texture mapping" style="width:50%"/>
+			<figcaption>
+				<p>Texture mapping chocolate analogy</p>
+				<p>Image credit: CS 184 Lecture 6, Fall 2026</p>
+			</figcaption>
+		</figure>
+
+		<p>In the context of texture mapping, pixel sampling is the process we use to map each location on our object to a location on the texture. We try to figure out which colors each pixel on our display should be in order to recreate the original image as best as possible. We do this for the entire object to “wrap” it in our desired texture.</p>
+
+		<p>To implement pixel sampling and use it to perform texture mapping, I began by modifying <code>rasterize_textured_triangle()</code> using logic from previous tasks to find the bounding box of the triangle, iterate through each subpixel in it, and check to see if they are inside the triangle. If a subpixel is inside, I calculated its barycentric coordinates using the formulas seen in class (and used in task 4) and used them to determine the interpolated texture coordinates for the subpixel. Finally, I found the texture color based on whether the sampling method was nearest neighbor or bilinear interpolation by calling either <code>sample_nearest()</code> or <code>sample_bilinear()</code>, ending the function by writing the appropriate color to our <code>sample_buffer</code>.</p>
+
+		<p>These sampling methods are two common methods used to determine what color a pixel should be when our texel coordinates, the location on the 2D texture, do not lie perfectly on any individual pixel. To determine what texel to return, they use different approaches. Nearest neighbor sampling simply grabs whichever texel is closest to the coordinate by rounding to the nearest whole texel and returning it. Bilinear pixel sampling, on the other hand, takes each of the four surrounding texels and blends them together, returning a more smooth result.</p>
+
+		<figure>
+			<img src="assets/Task 5 Sampling Example.png" alt="Sampling" style="width:50%"/>
+			<figcaption>
+				<p>Texel coordinates (red) that don't lie perfectly on a sample location (black)</p>
+				<p>Image credit: CS 184 Lecture 7, Fall 2026</p>
+			</figcaption>
+		</figure>
+
+		<p>To implement <code>sample_nearest()</code>, I converted the normalized UV coordinates to texel coordinates by scaling them by the texture’s width and height, rounded to the nearest integer, and returned the closest texel. For <code>sample_bilinear()</code>, I converted the percentages to the pixel address, found the four nearest pixels as well as their colors, calculated the horizontal and vertical interpolation offsets, and used them all to interpolate the four colors to return the final blended result.</p>
+
+		<p>Both methods have their pros and cons depending on your approaches and desired end results. In the following comparison, however, we can see when bilinear clearly defeats nearest pixel sampling:</p>
+
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 5 Nearest-1.png" width="400px"/>
+				  <figcaption>Nearest at 1 sample/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 5 Nearest-16.png" width="400px"/>
+				  <figcaption>Nearest at 16 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 5 Bilinear-1.png" width="400px"/>
+				  <figcaption>Bilinear at 1 sample/pixel</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 5 Bilinear-16.png" width="400px"/>
+				  <figcaption>Bilinear at 16 samples/pixel</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td colspan="2" style="text-align: center; padding-top: 15px;"">
+				  <figcaption style="display: block;">Different sampling methods and rates</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>Zooming in on Italy, we can see how bilinear pixel sampling gives us a much smoother image whereas nearest pixel sampling comes out much more pixelated. We can also see how the latitude and longitude lines come out much smoother as well when using bilinear compared to nearest. Here is my breakdown for each:</p>
+
+		<p><u>Nearest at 1 sample/pixel</u>: Very blocky with rough transitions in color for Italy, especially darker areas. The longitude line also has very clear differences in its shades of white.</p>
+
+		<p><u>Nearest at 16 samples/pixel</u>: Slightly better transitions in color for Italy but still block-like for darker areas.</p>
+
+		<p><u>Bilinear at 1 sample/pixel</u>: Comparable to nearest at 16 samples/pixel. Darker areas of Italy are still block like, but the smooth transition in color is more evident.</p>
+
+		<p><u>Bilinear at 16 samples/pixel</u>: Best looking result. The transitions from darker to brighter colors of Italy are very smooth and the longitude line is a very consistent shade of white.</p>
+
+		<p>There would be a large difference between these two methods during magnification (as seen in this example). When magnified, nearest creates sharp, block-like results since it just grabs the nearest texel color and has to stretch it across multiple pixels, creating high-frequency discontinuities. Bilinear on the other hand, blends the surrounding texel colors together by acting as a low-pass filter, creating a much smoother result.</p>
+
+		<p>While rendering, I ran into a problem where there was no difference in the images when using 1 sample per pixel as opposed to 16 for both nearest and bilinear. This was because at the end of <code>rasterize_textured_triangle()</code>, I called <code>filled_pixel()</code> instead of using the supersampling logic I built in task 2. To fix this, I changed my function to perform the same operations (sampling, barycentric coordinate calculations, etc.) on subpixels as opposed to entire pixels, which fixed the rendered images by factoring in the different sampling rates.</p>
+
+		<br>
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
