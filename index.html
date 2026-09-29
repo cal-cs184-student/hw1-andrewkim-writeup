@@ -32,23 +32,21 @@
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/fa26">cs184.eecs.berkeley.edu/fa26</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw1-andrewkim-writeup/">cal-cs184-student.github.io/hw1-andrewkim-writeup/</a>
 		
 		<br>
 
-		Link to GitHub repository: (TODO) <a href="https://cs184.eecs.berkeley.edu/fa26">cs184.eecs.berkeley.edu/fa26</a>
-
-		<figure>
-			<img src="assets/lion.jpg" alt="Lion" style="width:50%"/>
-			<figcaption>You can add images with captions!</figcaption>
-		</figure>
+		Link to GitHub repository: <a href="https://github.com/cal-cs184-student/hw1-andrewkim">github.com/cal-cs184-student/hw1-andrewkim</a>
 
 		<!--
 		We've already added one heading per task, to make your write-up as navigable when grading. Please fit your write-up within these sections!
 		-->
 
 		<h2>Overview</h2>
-		<p>Give a high-level overview of what you implemented in this homework. Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.</p>
+
+		<p>In this assignment, I implemented a fully functional rasterizer that rasterizes images through extensive functionality that can toggle between different tools and resolutions depending on the desired result. I began at the foundation of rendering images by starting with how to draw a single triangle on the screen, the foundational building block of what objects are composed of in graphics. From there, I worked my way up by smoothening out pixelated images to blending colors together, ending off with “wrapping” objects with cool textures and details.</p>
+
+		<p>As a whole, this assignment gave me a very strong understanding of the graphics pipeline and how a computer renders an image on your screen. I have learned many things about how objects are not only rendered, but also how to clean up an image made out of pixels and how to approach a complicated problem differently. By converting a complicated problem like interpolating colors or “wrapping” an object in a texture into a mathematical one computers can understand, I gained new perspectives on how we can use computers to solve problems, especially in a creative field like computer graphics.</p>
 
 		<br>
 
@@ -85,36 +83,6 @@
 			<img src="assets/Task 1 Screenshot.png" alt="Triangles" style="width:50%"/>
 			<figcaption>Rasterized triangles of different shapes and colors</figcaption>
 		</figure>
-
-		<!--Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.-->
-
-		<!---
-		<p>Here is an example 2x2 gridlike structure using an HTML table. Each <b>tr</b> is a row and each <b>td</b> is a column in that row. You might find this useful for framing and showing your result images in an organized fashion.</p>
-		<div style="display: flex; flex-direction: column; align-items: center;">
-			<table style="width: 100%; text-align: center; border-collapse: collapse;">
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="assets/lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="assets/lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			  <tr>
-				<td style="text-align: center;">
-				  <img src="assets/lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-				<td style="text-align: center;">
-				  <img src="assets/lion.jpg" width="400px"/>
-				  <figcaption>Caption goes here.</figcaption>
-				</td>
-			  </tr>
-			</table>
-		</div>
-		-->
 		
 		<br>
 
@@ -246,7 +214,7 @@
 			</figcaption>
 		</figure>
 
-		<p>In the context of texture mapping, pixel sampling is the process we use to map each location on our object to a location on the texture. We try to figure out which colors each pixel on our display should be in order to recreate the original image as best as possible. We do this for the entire object to “wrap” it in our desired texture.</p>
+		<p>In the context of texture mapping, pixel sampling is the process we use to map each location on our object to a location on the texture. Our location on the texture image is represented as a percentage of the image size, (u,v), where we look up the location on the texture, grab the color there, and fill the pixel on the screen with that color. We do this for the entire object to “wrap” it in our desired texture in order to recreate the original image as best as possible.</p>
 
 		<p>To implement pixel sampling and use it to perform texture mapping, I began by modifying <code>rasterize_textured_triangle()</code> using logic from previous tasks to find the bounding box of the triangle, iterate through each subpixel in it, and check to see if they are inside the triangle. If a subpixel is inside, I calculated its barycentric coordinates using the formulas seen in class (and used in task 4) and used them to determine the interpolated texture coordinates for the subpixel. Finally, I found the texture color based on whether the sampling method was nearest neighbor or bilinear interpolation by calling either <code>sample_nearest()</code> or <code>sample_bilinear()</code>, with mipmap level 0 for this task, ending the function by writing the appropriate color to our <code>sample_buffer</code>.</p>
 
@@ -311,21 +279,54 @@
 		<br>
 
 		<h2>Task 6: "Level Sampling" with mipmaps for texture mapping</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-		<h2>(Optional) Task 7: Extra Credit - Draw Something Creative!</h2>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>When an object on our screen moves further away from us, a single pixel will end up covering more area of the texture as that object gets smaller (minification). As a result, visual artifacts will appear because we are trying to “squeeze” the full resolution of our texture in a small pixel space. To account for this, we use a series of pre-calculated versions of our texture called mipmaps that decrease in size and by half the resolution at each level. Level sampling is the process of determining which of these layers to use when rendering pixels on the screen. It is a form of pre-filtering anti-aliasing that is intended to prevent these artifacts from forming when textures are viewed from a distance or at angles.</p>
 
-		<h2>Additional Notes (please remove)</h2>
-		<ul>
-			<li>You can also add code if you'd like as so: <code>code code code</code></li>
-			<li>If you'd like to add math equations, 
-				<ul>
-					<li>You can write inline equations like so: \( a^2 + b^2 = c^2 \)</li>
-					<li>You can write display equations like so: \[ a^2 + b^2 = c^2 \]</li>
-				</ul>
-			</li>
-		</ul>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-collapse: collapse;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/Task 6 Mipmap Example.png" width="400px"/>
+				  <figcaption>Different resolutions per layer</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/Task 6 Mipmap Layers.png" width="400px"/>
+				  <figcaption>Different sizes per layer</figcaption>
+				</td>
+			  </tr>
+			  <tr>
+				<td colspan="2" style="text-align: center; padding-top: 15px;"">
+				  <figcaption style="display: block;">Image credits: CS 184 Lecture 6, Fall 2026</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
+
+		<p>To implement level sampling for texture mapping, I began by modifying <code>rasterize_textured_triangle()</code> by creating and calling a helper function, <code>calculateBarycentric()</code>, to not repeat my logic used elsewhere. This helper function was also integrated into task 4. As we iterate through every pixel and subpixel, if the current subpixel is inside the triangle, <code>calculateBarycentric()</code> is used to calculate the barycentric coordinates for the current subpixel as well as the subpixels to the right and below it. I then interpolated the texture coordinates for all three. The reason we do so for these added subpixels is to determine the rate of change that happens on our texture relative to our screen and to then use that to determine what mipmap level to sample from. Afterwards, I created the <code>SampleParams</code> struct <code>sp</code> with each point’s interpolated texture coordinates as well as our <code>LevelSampleMethod</code> (<code>lsm</code>) and pixel sample method (<code>psm</code>) as instructed by the project spec. <code>sp</code> is then passed into the helper function <code>sample()</code>, which determines the color for the subpixel which we will discuss later. Finally, we write the returned color to <code>sample_buffer</code> to end the function.</p>
+
+		<p>To recall, (x, y) is our pixel location and (u, v) is its corresponding location on the texture represented as a percentage, which holds the color to fill our pixel with. If we move one coordinate on our screen, how much do we move on the texture? We need differentials (dx, dy) to answer this because if the color for the next immediate pixel (on the texture) is far away from the color we just grabbed, we are trying to “squeeze” a big portion of the texture image into a single pixel as mentioned above. We therefore need mipmapping to use a smaller, lower resolution version of the texture to prevent artifacts from forming. The purpose of the helper function <code>get_level()</code> is to find this level.</p>
+
+		<figure>
+			<img src="assets/Task 6 Screen vs Texture Space.png" alt="Sampling" style="width:50%"/>
+			<figcaption>
+				<p>Image credit: CS 184 Lecture 6 Slides, Fall 2026</p>
+			</figcaption>
+		</figure>
+
+		<p>To implement <code>get_level()</code>, I first calculate the difference vectors, which together is the change in our texture space when moving by 1 pixel (or subpixel) in our screen space. I then scale up these vectors accordingly by the width and height of the full resolution texture image. With these, I finally calculate the mipmap level using the formula seen in lecture and return it.</p>
+
+		<p><code>get_level()</code> is called within our <code>sample()</code> function, which is responsible for determining how to use the mipmap level to find the color of our current pixel/subpixel based on user settings (<code>lsm</code> and <code>psm</code>). If <code>lsm</code> is set to <code>L_ZERO</code>, we sample from resolution 0 as done in task 5. If <code>lsm</code> is set to <code>L_NEAREST</code>, we round our level to the nearest integer and sample from that level (i.e. 1.7 → 2). If <code>lsm</code> is set to <code>L_LINEAR</code>, we sample from both of the neighboring levels (i.e. 1.7 → 1 and 2) and linearly interpolate using the weight as described in the project spec. This is similar to calculating barycentric coordinates with the idea of using a “weight”, except this time we are in 1D instead of 2D. For all three level sampling methods, we sample based on our <code>psm</code>, calling <code>sample_nearest()</code> or <code>sample_bilinear()</code> accordingly. One last detail to mention is that when <code>lsm</code> is set to <code>L_LINEAR</code> and <code>psm</code> is set to <code>P_LINEAR</code>, this combination is known as trilinear sampling.</p>
+
+		<p>There are benefits and tradeoffs in using the three techniques implemented: pixel sampling, level sampling, and the number of samples per pixel (supersampling). Here we compare their performance in speed, memory usage, and antialiasing power.</p>
+
+		<p>Regarding speed, pixel sampling is the fastest of the three regardless of whether you use nearest neighbor or bilinear sampling because it only samples from a single texture level. Level sampling is slightly slower because it already has pre-computed, lower resolution versions of the texture where it doesn’t need to do much additional computation thanks to these mipmaps. Supersampling is the slowest of the three because it needs to sample multiple times over for every single pixel.</p>
+
+		<p>In terms of memory usage, the benefits come in the same order as speed. Pixel sampling uses the least memory because it uses no additional space. Level sampling uses roughly a third more memory in order to store the mipmap layers as we saw in lecture and discussion, so it falls in the middle. Supersampling uses the most memory because as it renders the image at a much higher resolution, it stores the subpixels in a much larger <code>sample_buffer</code> before resolving it to <code>frame_buffer</code> as seen in our implementation in this homework. The size of <code>sample_buffer</code> scales depending on <code>sample_rate</code> which could dramatically increase the amount of memory needed.</p>
+
+		<p>When comparing antialiasing power, however, the hierarchy between the three techniques reverses. Supersampling is the best because it actively removes visual artifacts by going through each pixel and blending in the colors of their subpixels, creating a clean transition of colors and a much smoother image. Level sampling comes in second because it addresses a key problem when rendering images in that it fixes texture aliasing in distant objects, though it still doesn’t completely remove jaggies in the rest of the image like supersampling can. Pixel sampling is the worst of the three. Nearest neighbor creates blocky results when higher frequencies are prevalent since it does no blending of colors. Bilinear smoothens the image during magnification as seen in the Italy example from task 5, but fails during minification.</p>
+
+		<p>Overall, the three techniques all have their pros and cons depending on the constraints you have and the desired end results. When comparing them all side by side, it makes sense that the higher costs in terms of speed and memory usage result in a higher quality result (supersampling) whereas a cheaper approach gives you images with more unwanted aliasing effects.</p>
+
 		</div>
 	</body>
 </html>
